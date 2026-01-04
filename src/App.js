@@ -259,7 +259,10 @@ function Main({ records, setRecords }) {
 /* ==================================================
    📊 RESULTS PAGE
    ================================================== */
-function Results({ records }) {
+function Results({ records, setRecords }) {
+  const handleDelete = (index) => {
+    setRecords(records.filter((_, i) => i !== index));
+  };
   return (
     <div style={styles.container}>
       <div style={styles.card}>
@@ -267,7 +270,6 @@ function Results({ records }) {
         <p style={{ textAlign: "center", fontSize: "18px", color: "#7f8c8d" }}>
           <strong>Total Records: {records.length}</strong>
         </p>
-
         <div style={{ overflowX: "auto" }}>
           <table style={styles.table}>
             <thead>
@@ -283,6 +285,7 @@ function Results({ records }) {
                 {ENABLE_YES_NO && <th style={styles.th}>Paid</th>}
                 {ENABLE_CHECKBOX && <th style={styles.th}>Services</th>}
                 {ENABLE_DROPDOWN && <th style={styles.th}>Type</th>}
+                <th style={styles.th}>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -299,12 +302,16 @@ function Results({ records }) {
                   {ENABLE_YES_NO && <td style={styles.td}>{r.yesNo}</td>}
                   {ENABLE_CHECKBOX && <td style={styles.td}>{r.services.join(", ")}</td>}
                   {ENABLE_DROPDOWN && <td style={styles.td}>{r.dropdown}</td>}
+                  <td style={styles.td}>
+                    <button style={styles.deleteButton} onClick={() => handleDelete(i)}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
         <div style={{ textAlign: "center", marginTop: "25px" }}>
           <Link to="/main" style={styles.link}>
             <button style={styles.button}>Back to Form</button>
@@ -315,9 +322,9 @@ function Results({ records }) {
   );
 }
 
-/* ==================================================
-   🚦 ROUTER
-   ================================================== */
+// ==================================================
+// 🚦 ROUTER
+// ==================================================
 export default function App() {
   const [records, setRecords] = useState([]);
 
@@ -326,7 +333,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/main" element={<Main records={records} setRecords={setRecords} />} />
-        <Route path="/results" element={<Results records={records} />} />
+        <Route path="/results" element={<Results records={records} setRecords={setRecords} />} />
       </Routes>
     </BrowserRouter>
   );
